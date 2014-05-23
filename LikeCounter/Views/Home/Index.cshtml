@@ -1,0 +1,44 @@
+﻿@model LikeCounter.ViewModels.Home.HomeIndexViewModel
+@{
+    ViewBag.Title = "Home Page";
+    ViewBag.PageId = Model.PageId;
+}
+
+<div class="jumbotron">
+    <h1>Like Counter</h1>
+    <p class="lead">Press FB Like button.</p>    
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Page Id: @(Model.PageId)</h2>
+        <p>
+            <div class="fb-like" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+        </p>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>        
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=156341897713190&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        window.fbAsyncInit = function () {            
+            var pageId = $('body').attr('data-page-id');
+            var options = { 'pageId': pageId }
+            var counter = new LikeCounter(options);
+
+            var likeCallBack = function(url, html_element) {                
+                counter.registerLike();
+            };
+            FB.Event.subscribe('edge.create', likeCallBack);
+        };       
+    </script>
+}
